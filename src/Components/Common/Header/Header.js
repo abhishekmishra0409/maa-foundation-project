@@ -1,122 +1,84 @@
 import React, { useState } from "react";
-import { NavLink, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 
 const Header = () => {
   const location = useLocation();
-
-  const linkStyle = (path) =>
-    location.pathname === path ? "text-red-600":"text-black-500";
-
+  const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
 
   const toggleMenu = () => {
     setIsOpen(!isOpen);
   };
 
+  const isActive = (path) => {
+    if (path === '/') {
+      return location.pathname === '/';
+    }
+    if (path === '/blogs') {
+      return location.pathname.startsWith('/blogs') || location.pathname.startsWith('/blog/');
+    }
+    if (path === '/events') {
+      return location.pathname.startsWith('/events') || location.pathname.startsWith('/event/');
+    }
+    return location.pathname.startsWith(path);
+  };
+
+  const handleNavigation = (url) => {
+    setIsOpen(false);
+    navigate(url);
+    window.scrollTo(0, 0);
+  };
+
+  const menuItems = [
+    ["Home", "/"],
+    ["Events", "/events"],
+    ["Gallery", "/gallery"],
+    ["Blogs", "/blogs"],
+    ["About", "/about"],
+  ];
+
   return (
-    <nav className="relative px-4 py-4 flex justify-between items-center bg-white">
-      <NavLink className={`text-3xl font-bold leading-none`} to="#">
-        <img
-          alt="maa-logo"
-          className="h-10 ml-10 mt-3"
-          src="/assets/maa-logo.png"
-        />
-      </NavLink>
+    <nav className="relative py-4 flex justify-between items-center bg-secondary-light w-full px-20 pb-5">
+      <Link className="text-3xl font-bold leading-none" to="/" onClick={() => handleNavigation("/")}>
+        <img alt="maa-logo" className="h-14" src="/assets/maa-logo.png" />
+      </Link>
+
+      {/* Mobile menu button */}
       <div className="lg:hidden">
-        <button
-          onClick={toggleMenu}
-          className="text-gray-700 hover:text-gray-900 focus:outline-none focus:text-gray-900"
-        >
-          <svg
-            className="h-6 w-6"
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth="2"
-              d="M4 6h16M4 12h16M4 18h16"
-            />
+        <button onClick={toggleMenu} className="text-gray-700 hover:text-gray-900 focus:outline-none focus:text-gray-900">
+          <svg className="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16" />
           </svg>
         </button>
       </div>
-      <ul
-        className={`lg:flex lg:items-center lg:w-auto lg:space-x-4 ${
-          isOpen ? "block" : "hidden"
-        } absolute lg:relative top-16 lg:top-auto left-0 lg:left-auto w-full lg:w-auto bg-white lg:bg-transparent p-4 lg:p-0`}
-      >
-        <li>
-          <NavLink
-            className={`block lg:inline-block text-xl hover:text-primary-base font-semibold hover:underline py-2 lg:py-0 lg:mr-8 ${linkStyle(
-              "/"
-            )}`}
-            to="/"
-          >
-            Home
-          </NavLink>
-        </li>
-        <li>
-          <NavLink
-            className={`block lg:inline-block text-xl hover:text-primary-base font-semibold hover:underline py-2 lg:py-0 lg:mr-8 ${linkStyle(
-              "/event"
-            )}`}
-            to="/event"
-          >
-            Event
-          </NavLink>
-        </li>
-        <li>
-          <NavLink
-            className={`block lg:inline-block text-xl hover:text-primary-base font-semibold hover:underline py-2 lg:py-0 lg:mr-8 ${linkStyle(
-              "/gallery"
-            )}`}
-            to="/gallery"
-          >
-            Gallery
-          </NavLink>
-        </li>
-        <li>
-          <NavLink
-            className={`block lg:inline-block text-xl hover:text-primary-base font-semibold hover:underline py-2 lg:py-0 lg:mr-8 ${linkStyle(
-              "/blog"
-            )}`}
-            to="/blog"
-          >
-            Blog
-          </NavLink>
-        </li>
-        <li>
-          <NavLink
-            className={`block lg:inline-block text-xl hover:text-primary-base font-semibold hover:underline py-2 lg:py-0 lg:mr-20 ${linkStyle(
-              "/about"
-            )}`}
-            to="/about"
-          >
-            About
-          </NavLink>
-        </li>
-        <li className="mt-4 lg:mt-0 lg:ml-auto">
-          <NavLink
-            className={`block lg:inline-block py-2 px-6 border bg-primary-base hover:bg-primary-dark text-white  text-sm font-bold rounded-xl ${linkStyle(
-              "/signup"
-            )}`}
-            to="/signup"
+
+      {/* Desktop menu */}
+      <ul className={`lg:flex lg:items-center lg:w-auto lg:space-x-4 ${isOpen ? "block" : "hidden"} absolute lg:relative top-16 lg:top-auto left-0 lg:left-auto w-full lg:w-auto bg-white lg:bg-transparent p-4 lg:p-0`}>
+        {menuItems.map(([title, url]) => (
+          <li key={url}>
+            <button
+              onClick={() => handleNavigation(url)}
+              className={`nav-link font-normal ${isActive(url) ? "text-primary-base underline !font-medium" : "text-black-500"}`}
+            >
+              {title}
+            </button>
+          </li>
+        ))}
+        <li className="mt-4 lg:mt-0">
+          <button
+            onClick={() => handleNavigation("/signup")}
+            className="block lg:inline-block py-2 px-6 border border-primary-base hover:border-primary-dark bg-primary-base hover:bg-primary-dark text-white text-sm font-bold rounded-xl no-underline"
           >
             Sign Up
-          </NavLink>
+          </button>
         </li>
         <li className="mt-4 lg:mt-0">
-          <NavLink
-            className={`block lg:inline-block py-2 px-6 border border-primary-base hover:bg-primary-base hover:text-white  text-sm font-bold rounded-xl ${linkStyle(
-              "/login"
-            )}`}
-            to="/login"
+          <button
+            onClick={() => handleNavigation("/login")}
+            className="block lg:inline-block py-2 px-6 border border-primary-base hover:bg-primary-base hover:text-white text-sm font-bold rounded-xl no-underline"
           >
             Log In
-          </NavLink>
+          </button>
         </li>
       </ul>
     </nav>

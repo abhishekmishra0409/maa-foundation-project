@@ -1,11 +1,14 @@
-import React from "react";
-import blogsData from "./blogsdata";
+import React, { useContext } from "react";
+// import blogsData from "./blogsData";
 import BlogsCard from "./BlogsCard";
 import { image } from "./blogsdata";
+import { BlogContext } from "../../context/blogContext";
 
 const Blogs = () => {
+
+  const {blogs} = useContext(BlogContext);  
   return (
-    <>
+    <div className="">
       <div className="relative">
         {/* Background Image */}
         <img
@@ -15,44 +18,23 @@ const Blogs = () => {
         />
 
         {/* Absolute Positioned Content */}
-        <div className="pl-3 sm:pl-10 absolute inset-0 flex flex-col justify-center lg:pl-[10%] lg:py-[8%]">
-          <p className="font-semibold text-3xl lg:text-5xl text-black mb-4 lg:mb-6">
+        <div className="absolute inset-0 flex flex-col justify-center p-4 sm:pl-10 lg:pl-[10%] lg:py-[8%]">
+          <p className="font-bold text-4xl lg:text-5xl text-black mb-2 sm:mb-4 lg:pb-10">
             Blogs
           </p>
-          <p className="font-inter text-lg lg:text-3xl font-semibold text-red-600 mb-2 lg:mb-4">
+          <p className="font-semibold text-xl lg:text-3xl text-primary-base mb-1 sm:mb-2 lg:mb-4">
             Voice of Empowerment
           </p>
-          <p className="font-itim text-base lg:text-xl font-normal text-black leading-normal mb-2 lg:mb-4">
+          <p className="text-base lg:text-2xl text-black leading-normal mb-1 sm:mb-2 lg:mb-4">
             Amplifying Women's Strength and Influence
           </p>
         </div>
 
-        {/* Media Query for Smaller Dimensions */}
-        <style jsx>{`
-          @media (max-width: 499px) {
-            .lg:pl-[10%],
-            .lg:py-[8%] {
-              padding-left: 5%; /* Adjust padding for smaller screens */
-              padding-right: 5%;
-              padding-top: 8%;
-              padding-bottom: 8%;
-            }
-            .text-3xl {
-              font-size: 2rem; /* Decrease font size for smaller screens */
-            }
-            .text-lg {
-              font-size: 1.125rem;
-            }
-            .text-base {
-              font-size: 0.875rem;
-            }
-          }
-        `}</style>
       </div>
 
-      <div className="bg-[#ffdede59] pt-5 md:pt-10 lg:pt-20">
-        <div className="card-container w-full h-auto flex flex-wrap justify-center gap-[45px]">
-          {blogsData.map((item) => {
+      <div className=" border pt-5 md:pt-10 lg:pt-20">
+        <div className="mx-20 h-auto flex flex-wrap justify-center gap-8">
+          {blogs.map((item) => {
             return (
               <BlogsCard
                 id={item.id}
@@ -65,13 +47,13 @@ const Blogs = () => {
             );
           })}
         </div>
-        <div className="w-full flex justify-center h-[300px] items-center">
+        <div className="w-full flex justify-center my-28 items-center">
           <button className="btn-primary ">
             View more
           </button>
         </div>
       </div>
-    </>
+    </div>
   );
 };
 

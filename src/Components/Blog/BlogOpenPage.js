@@ -5,18 +5,19 @@ import { image } from "./blogsdata";
 import BlogsOpenPageCard from "./BlogsOpenPageCard";
 
 const BlogOpenPage = () => {
-  function scrollToTop() {
-    window.scrollTo(0, 0);
-  }
-  const { blogdataId } = useParams();
-  const coverImage = blogsData[blogdataId - 1].coverImage;
-  const title = blogsData[blogdataId - 1].title;
-  const author = blogsData[blogdataId - 1].author;
-  const authorImage = blogsData[blogdataId - 1].authorImage;
-  const date = blogsData[blogdataId - 1].date;
-  const data = blogsData[blogdataId - 1].data;
+
+  const { blogId } = useParams();
+  const currentIndex = blogsData.findIndex((item) => item.id === blogId);
+  const nextBlogs = blogsData.slice(currentIndex + 1, currentIndex + 6);
+
+  const coverImage = blogsData[blogId - 1].coverImage;
+  const title = blogsData[blogId - 1].title;
+  const author = blogsData[blogId - 1].author;
+  const authorImage = blogsData[blogId - 1].authorImage;
+  const date = blogsData[blogId - 1].date;
+  const data = blogsData[blogId - 1].data;
   return (
-    <div className=" bg-[#ffdede2c]">
+    <div className=" bg-secondary-light">
       <div className="w-full h-auto">
         <img className="w-full" src={coverImage} alt="" />
       </div>
@@ -26,7 +27,7 @@ const BlogOpenPage = () => {
             <div className="h-[30px] w-[30px] overflow-hidden rounded-full">
               <img src={authorImage} alt="" />
             </div>
-            <div className="text-[15px] sm:text-[20px] font-medium text-[#E03233]">
+            <div className="text-[15px] sm:text-[20px] font-medium text-primary-base">
               {author}
             </div>
           </div>
@@ -39,16 +40,16 @@ const BlogOpenPage = () => {
         </div>
       </div>
 
-      <div className="py-4 sm:py-10 lg:py-20 flex justify-center items-center bg-[#ec1d1d3b] text-[25px] sm:text-[35px] lg:text-[45px] font-semibold px-8 sm:px-14 lg:px-28">
+      <div className="font-sans py-4 sm:py-10 lg:py-20 px-8 sm:px-14 lg:px-28 flex justify-center items-center bg-[#FFC3C4] text-3xl lg:text-5xl font-semibold leading-loose">
         {title}
       </div>
 
-      <div className="text-[18px] sm:text-[20px] lg:text-[25px] flex flex-col px-8 sm:px-14 lg:px-28">
+      <div className="flex flex-col px-8 sm:px-14 lg:px-28 lg:text-2xl mt-4">
         <div>
           {data.map((item) => {
             return (
-              <p className="my-[30px]">
-                <span className="text-[#E03233] font-medium">
+              <p className="my-8 text-gray-dark text-xl leading-8">
+                <span className="text-primary-base font-medium">
                   {item.datatitle} :{" "}
                 </span>
                 {item.datadesc}
@@ -58,11 +59,11 @@ const BlogOpenPage = () => {
         </div>
       </div>
 
-      <div className="flex flex-col h-[730px] overflow-y-scroll w-full justify-center gap-3 items-center">
-
-      {blogsData.map((item) => {
+      <div className="relative flex flex-col justify-center gap-10 items-start my-24 mx-24">
+        {nextBlogs.map((item, index) => {
           return (
-              <BlogsOpenPageCard
+            <BlogsOpenPageCard
+              key={item.id}
               id={item.id}
               coverImage={item.coverImage}
               authorImage={item.authorImage}
@@ -70,10 +71,13 @@ const BlogOpenPage = () => {
               sample_data={item.sample_data}
               author={item.author}
               date={item.date}
-              />
-              );
-              })}
-            </div>
+              className={index === nextBlogs.length - 1 ? "relative z-10" : ""}
+            />
+          );
+        })}
+        {/* here using rgba for gradient effect... decrease opacity more for more transparency */}
+        <div className="absolute bottom-0 left-0 right-0 h-20 bg-gradient-to-t from-[rgba(255,250,250,0.5)] to-transparent z-0"></div>
+      </div>
     </div>
   );
 };
